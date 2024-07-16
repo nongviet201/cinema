@@ -1,0 +1,66 @@
+.banner {
+    padding: 25px 0 50px;
+}
+.offcanvas-body {
+    margin-left: 20px;
+}
+
+.movie {
+    padding: 5px;
+}
+.card-movie {
+    padding: 0 17px;
+    position: relative;
+}
+.movie-content {
+    position: relative;
+    overflow: hidden;
+}
+.movie-img {
+    border-radius: 10px;
+    overflow: hidden;
+}
+.movie-name {
+    font-size: 18px;
+    margin: 20px 0 30px;
+}
+.vote{
+    position: absolute;
+    bottom: 110px;
+    width: 90px;
+    height: 25px;
+    text-align: center;
+    right: -7px;
+    background: rgba(0, 0, 0, .4);
+    font-size: 18px;
+    color: white;
+    overflow: hidden; /* Ẩn phần nằm ngoài phạm vi của .vote */
+    transform: skewX(25deg); /* Đổi chiều xoay và giảm mức độ skew */
+}
+.vote .point {
+    transform: skewX(-25deg); /* Đổi chiều xoay và giảm mức độ skew */
+    font-weight: 600;
+}
+.more-movie-btn {
+    background-color: white;
+    border: 1px solid #FB9440;
+    padding: 10px;
+    margin: 0px;
+    width: 200px;
+}
+.more-movie-btn a{
+    font-size: 12px;
+    color: #FB9440;
+}
+
+.line {
+    display: block;
+    border-bottom: 6px solid #f4f4f4;
+    transform: matrix(1, 0, 0, -1, 0, 0);
+    margin: 25px 0;
+}
+
+.sub-blog img {
+    width: 195px;
+    height: 150px;
+}
