@@ -3,9 +3,9 @@
       th:replace="~{web/layout/layout :: layout(~{:: title}, ~{:: #css}, ~{:: #content}, ~{:: #js})}">
 <title>CINEMA</title>
 <th:block id="css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css">
-    <link rel="stylesheet" href="/web-asset/css/index.css">
+    <link rel="stylesheet" href="/web-asset/plugins/slick-slider/slick.css">
+    <link rel="stylesheet" href="/web-asset/plugins/slick-slider/slick-theme.css">
+    <link rel="stylesheet" href="/web-asset/css/pages/index.css">
 </th:block>
 <body>
 <main>
@@ -23,15 +23,18 @@
                 </div>
             </div>
         </div>
-        <main class="container">
+        <main class="container ">
             <div class="body-content">
-                <div class="sub-menu">
+                <div class="body-sub-menu">
                     <div class="d-none d-xl-flex">
-                        <h3 class="me-3">PHIM</h3>
+                        <span class="me-2"></span>
+                        <h3 class="me-3 mb-0">PHIM</h3>
                     </div>
                     <nav>
                         <ul>
-                            <li class="me-3"><a href="">Đang chiếu</a></li>
+                            <li class="me-3">
+                                <a href="">Đang chiếu</a>
+                            </li>
                             <li class="me-3"><a href="">Sắp chiếu</a></li>
                             <li class="me-3"><a href="">Phim IMAX</a></li>
                         </ul>
@@ -40,128 +43,37 @@
 
                 <div class="movie">
                     <div class="row">
-                        <div class="card-movie col-lg-3 col-6">
+                        <div class="card-movie position-relative col-lg-3 col-6" th:each="movie : ${movies}">
                             <div class="movie-content">
                                 <div class="movie-img">
-                                    <img src="https://cdn.galaxycine.vn/media/2024/6/20/despicable-me-4-500_1718865149847.jpg"
-                                         alt="">
+                                    <a th:href="'/movie/' + ${movie.getSlug()}">
+                                        <img th:src="${movie.getPoster()}"
+                                             th:alt="${movie.getName()}">
+                                        <div class="overlay"></div>
+                                    </a>
+                                    <div class="movie-content-hover">
+                                        <a th:href="'/movie/' + ${movie.getSlug()}"
+                                            class="movie-hover-btn-ticket mb-3">
+                                            <i class="fa-solid fa-ticket"></i>
+                                            <p class="m-0 ms-2">Mua vé</p>
+                                        </a>
+                                        <a class="movie-hover-btn-trailer">
+                                            <i class="fa-solid fa-circle-play"></i>
+                                            <p class="m-0 ms-2">Trailer</p>
+                                        </a>
+                                    </div>
+                                    <div class="vote">
+                                        <p class="point">
+                                            <span><i class="fa-solid fa-star fa-xs" style="color: #FFD43B;"></i></span>
+                                            <span th:text="${movie.getRating()}"></span>
+                                        </p>
+                                    </div>
                                 </div>
-                                <div class="vote">
-                                    <p class="point">
-                                        <span><i class="fa-solid fa-star fa-xs" style="color: #FFD43B;"></i></span>
-                                        <span>8.3</span>
-                                    </p>
-                                </div>
-                                <h3 class="movie-name">Kẻ cắp mặt trăng</h3>
                             </div>
+                            <a th:href="'/movie/' + ${movie.getSlug()}">
+                                <h3 class="movie-name text-uppercase" th:text="${movie.name}"></h3>
+                            </a>
                         </div>
-                        <div class="card-movie col-lg-3 col-6">
-                            <div class="movie-content">
-                                <div class="movie-img">
-                                    <img src="https://cdn.galaxycine.vn/media/2024/6/20/despicable-me-4-500_1718865149847.jpg"
-                                         alt="">
-                                </div>
-                                <div class="vote">
-                                    <p class="point">
-                                        <span><i class="fa-solid fa-star fa-xs" style="color: #FFD43B;"></i></span>
-                                        <span>8.3</span>
-                                    </p>
-                                </div>
-                                <h3 class="movie-name">Kẻ cắp mặt trăng</h3>
-                            </div>
-                        </div>
-                        <div class="card-movie col-lg-3 col-6">
-                            <div class="movie-content">
-                                <div class="movie-img">
-                                    <img src="https://cdn.galaxycine.vn/media/2024/6/20/despicable-me-4-500_1718865149847.jpg"
-                                         alt="">
-                                </div>
-                                <div class="vote">
-                                    <p class="point">
-                                        <span><i class="fa-solid fa-star fa-xs" style="color: #FFD43B;"></i></span>
-                                        <span>8.3</span>
-                                    </p>
-                                </div>
-                                <h3 class="movie-name">Kẻ cắp mặt trăng</h3>
-                            </div>
-                        </div>
-                        <div class="card-movie col-lg-3 col-6">
-                            <div class="movie-content">
-                                <div class="movie-img">
-                                    <img src="https://cdn.galaxycine.vn/media/2024/6/20/despicable-me-4-500_1718865149847.jpg"
-                                         alt="">
-                                </div>
-                                <div class="vote">
-                                    <p class="point">
-                                        <span><i class="fa-solid fa-star fa-xs" style="color: #FFD43B;"></i></span>
-                                        <span>8.3</span>
-                                    </p>
-                                </div>
-                                <h3 class="movie-name">Kẻ cắp mặt trăng</h3>
-                            </div>
-                        </div>
-                        <div class="card-movie col-lg-3 col-6">
-                            <div class="movie-content">
-                                <div class="movie-img">
-                                    <img src="https://cdn.galaxycine.vn/media/2024/6/20/despicable-me-4-500_1718865149847.jpg"
-                                         alt="">
-                                </div>
-                                <div class="vote">
-                                    <p class="point">
-                                        <span><i class="fa-solid fa-star fa-xs" style="color: #FFD43B;"></i></span>
-                                        <span>8.3</span>
-                                    </p>
-                                </div>
-                                <h3 class="movie-name">Kẻ cắp mặt trăng</h3>
-                            </div>
-                        </div>
-                        <div class="card-movie col-lg-3 col-6">
-                            <div class="movie-content">
-                                <div class="movie-img">
-                                    <img src="https://cdn.galaxycine.vn/media/2024/6/20/despicable-me-4-500_1718865149847.jpg"
-                                         alt="">
-                                </div>
-                                <div class="vote">
-                                    <p class="point">
-                                        <span><i class="fa-solid fa-star fa-xs" style="color: #FFD43B;"></i></span>
-                                        <span>8.3</span>
-                                    </p>
-                                </div>
-                                <h3 class="movie-name">Kẻ cắp mặt trăng</h3>
-                            </div>
-                        </div>
-                        <div class="card-movie col-lg-3 col-6">
-                            <div class="movie-content">
-                                <div class="movie-img">
-                                    <img src="https://cdn.galaxycine.vn/media/2024/6/20/despicable-me-4-500_1718865149847.jpg"
-                                         alt="">
-                                </div>
-                                <div class="vote">
-                                    <p class="point">
-                                        <span><i class="fa-solid fa-star fa-xs" style="color: #FFD43B;"></i></span>
-                                        <span>8.3</span>
-                                    </p>
-                                </div>
-                                <h3 class="movie-name">Kẻ cắp mặt trăng</h3>
-                            </div>
-                        </div>
-                        <div class="card-movie col-lg-3 col-6">
-                            <div class="movie-content">
-                                <div class="movie-img">
-                                    <img src="https://cdn.galaxycine.vn/media/2024/6/20/despicable-me-4-500_1718865149847.jpg"
-                                         alt="">
-                                </div>
-                                <div class="vote">
-                                    <p class="point">
-                                        <span><i class="fa-solid fa-star fa-xs" style="color: #FFD43B;"></i></span>
-                                        <span>8.3</span>
-                                    </p>
-                                </div>
-                                <h3 class="movie-name">Kẻ cắp mặt trăng</h3>
-                            </div>
-                        </div>
-
-
                         <div class="d-flex justify-content-center">
                             <button class="more-movie-btn"><a href="">Xem thêm ></a></button>
                         </div>
@@ -171,9 +83,10 @@
                 <div class="line"></div>
 
                 <section>
-                    <div class="sub-menu">
+                    <div class="body-sub-menu">
                         <div class="d-none d-xl-flex">
-                            <h3 class="me-3">GÓC ĐIỆN ẢNH</h3>
+                            <span class="me-2"></span>
+                            <h3 class="me-3 mb-0">GÓC ĐIỆN ẢNH</h3>
                         </div>
                         <nav>
                             <ul>
@@ -220,7 +133,7 @@
     </th:block>
 </main>
 <th:block id ="js">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
+    <script src="/web-asset/plugins/slick-slider/slick.min.js"></script>
     <script src="/web-asset/js/banner.js"></script>
 </th:block>
 </body>

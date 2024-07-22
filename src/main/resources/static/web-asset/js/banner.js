@@ -3,8 +3,10 @@ $(document).ready(function () {
         centerMode: true,
         centerPadding: '176px',
         slidesToShow: 1,
+        autoplay: true,
         prevArrow: false,
         nextArrow: false,
+        dots: true,
         responsive: [
             {
                 breakpoint: 1440,
