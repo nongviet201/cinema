@@ -3,6 +3,7 @@ package com.example.cinema.model.entity.movie;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -24,6 +25,8 @@ public class Movie {
     @Column(columnDefinition = "TEXT")
     String description;
     String poster;
+    @Column(columnDefinition = "INT")
+    Duration duration;
     double rating;
     boolean status;
     String trailer;

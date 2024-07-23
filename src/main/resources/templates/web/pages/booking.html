@@ -62,7 +62,12 @@
                                          data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
                                             <div class="d-flex flex-row gap-2 flex-wrap">
-                                                <button class="city-btn" onclick="toggleActive(this)">Hà Nội</button>
+                                                <button class="city-btn"
+                                                        th:each="city : ${cities}"
+                                                        onclick="getCityFunc(this)"
+                                                        th:value="${city.getId()}"
+                                                        th:text="${city.getName()}">
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -72,19 +77,23 @@
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                                 data-bs-target="#collapseTwo" aria-expanded="false"
                                                 aria-controls="collapseTwo">
-                                            <p class="accordion-title">Chọn vị trí</p>
+                                            <p class="accordion-title">Chọn Phim</p>
                                         </button>
                                     </h2>
                                     <div id="collapseTwo" class="accordion-collapse collapse"
                                          data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
-                                            <strong>This is the first item's accordion body.</strong> It is shown by
-                                            default, until the collapse plugin adds the appropriate classes that we use
-                                            to style each element. These classes control the overall appearance, as well
-                                            as the showing and hiding via CSS transitions. You can modify any of this
-                                            with custom CSS or overriding our default variables. It's also worth noting
-                                            that just about any HTML can go within the <code>.accordion-body</code>,
-                                            though the transition does limit overflow.
+                                            <div class="row">
+                                                <div class="col-lg-3 col-md-4 col-6" th:each="movie : ${movies}">
+                                                    <div class="movie-select cursor-pointer"
+                                                         th:value="${movie.id}"
+                                                         onclick="getMovieFunc(this)">
+                                                        <img th:src="${movie.getPoster()}"
+                                                             th:alt="${movie.getName()}">
+                                                        <h5 th:text="${movie.getName()}"></h5>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -93,26 +102,29 @@
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                                 data-bs-target="#collapseThree" aria-expanded="false"
                                                 aria-controls="collapseThree">
-                                            <p class="accordion-title">Chọn vị trí</p>
+                                            <p class="accordion-title">Chọn Suất Chiếu</p>
                                         </button>
                                     </h2>
                                     <div id="collapseThree" class="accordion-collapse collapse"
                                          data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
-                                            <strong>This is the first item's accordion body.</strong> It is shown by
-                                            default, until the collapse plugin adds the appropriate classes that we use
-                                            to style each element. These classes control the overall appearance, as well
-                                            as the showing and hiding via CSS transitions. You can modify any of this
-                                            with custom CSS or overriding our default variables. It's also worth noting
-                                            that just about any HTML can go within the <code>.accordion-body</code>,
-                                            though the transition does limit overflow.
+                                            <div class="px-4">
+                                                <div class="div-date">
+
+                                                </div>
+                                            </div>
+                                            <div class="cinema mt-4">
+
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-4 py-3 ps-3">
-                            <div class="w-100 h-100 bg-black"></div>
+                            <div class="current-showtime w-100 h-100">
+                                <div class="line-detail"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -121,11 +133,8 @@
     </th:block>
 </main>
 <th:block id="js">
-    <script>
-        function toggleActive(button) {
-            button.classList.toggle('active');
-        }
-    </script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/web-asset/js/page/booking.js"></script>
 </th:block>
 </body>
 </html>

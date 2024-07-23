@@ -1,7 +1,7 @@
 package com.example.cinema.model.entity.bill;
 
 import com.example.cinema.model.entity.User;
-import com.example.cinema.model.entity.cinema.ShowTime;
+import com.example.cinema.model.entity.cinema.Showtime;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,5 +30,5 @@ public class Bill {
 
     @ManyToOne
     @JoinColumn(name = "showtime_id")
-    ShowTime showTime;
+    Showtime showTime;
 }

@@ -15,7 +15,7 @@ import java.time.LocalTime;
 @Builder
 @Entity
 @Table(name = "showtime")
-public class ShowTime {
+public class Showtime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -26,4 +26,8 @@ public class ShowTime {
     @ManyToOne
     @JoinColumn(name = "movies_id")
     Movie movie;
+
+    @ManyToOne
+    @JoinColumn(name= "auditorium_id")
+    Auditorium auditorium;
 }

@@ -4,7 +4,7 @@
 }
 
 .movie-sub-entity {
-    padding: 100px;
+
 }
 
 .middle-content span {
@@ -22,4 +22,10 @@
     box-shadow: 0 25px 25px rgba(0, 0, 0, .15);
     border: 2px solid white;
     border-radius: 3px;
+}
+
+.div-title {
+    border: 1px solid rgb(208 208 208);
+    border-radius: 5px;
+    font-size: 14px;
 }
