@@ -1,5 +1,6 @@
 package com.example.cinema;
 
+import com.example.cinema.model.entity.bill.Combo;
 import com.example.cinema.model.entity.cinema.*;
 import com.example.cinema.model.entity.movie.*;
 import com.example.cinema.model.enums.AuditoriumType;
@@ -10,6 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -38,6 +42,8 @@ class CinemaApplicationTests {
     private MovieRepository movieRepository;
     @Autowired
     private ShowtimeRepository showtimeRepository;
+    @Autowired
+    private ComboRepository comboRepository;
 
     @Test
     void createCityData() {
@@ -88,20 +94,31 @@ class CinemaApplicationTests {
     @Test
     void createSeatData(int row, int column, int auditoriumId) {
         Auditorium auditorium = auditoriumRepository.findById(auditoriumId);
-        for (int i = 0; i <= row; i++) {
-            for (int j = 0; j <= column; j++) {
+        for (int i = 1; i <= column; i++) {
+            for (int j = 1; j <= row; j++) {
                 Seat seat = Seat.builder()
                     .type(SeatType.GHE_THUONG)
                     .status(true)
-                    .seatRow(i)
-                    .seatColumn(j)
+                    .seatRow(j)
+                    .seatColumn(numberToLetter(i))
                     .auditorium(auditorium)
                     .build();
                 seatRepository.save(seat);
             }
         }
     }
+    String numberToLetter(int number) {
+        String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
+            "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
+            "W", "X", "Y", "Z"};
 
+        // Chuyển đổi số sang chữ cái tương ứng
+        if (number >= 1 && number <= 26) {
+            return letters[number - 1];
+        } else {
+            return null;
+        }
+    }
 
     @Test
     void createGenresData() {
@@ -232,9 +249,13 @@ class CinemaApplicationTests {
         actors.add(actorRepository.findById(37).orElse(null));
 
         List<Movie> movies = new ArrayList<>();
-        movies.add(new Movie(1, "Vây Hãm Trên Không", "vay-ham-tren-khong",
+        movies.add(new Movie(
+            1,
+            "Vây Hãm Trên Không",
+            "vay-ham-tren-khong",
             "Bộ phim hành động ly kỳ dựa trên sự kiện có thật với sự tham gia của Ha Jung Woo, Yeo Jin Goo và Sung Dong Il được dựa trên một sự kiện có thật năm 1971, khi một thanh niên Hàn Quốc định cướp một chiếc máy bay chở khách khởi hành từ thành phố cảnh phía đông Sokcho bay tới Seoul. Mọi người trên chuyến bay này đều đang đặt cược mạng sống của mình!",
             "https://cdn.galaxycine.vn/media/2024/7/19/hijack-1971-1_1721360469683.jpg",
+            120,
             8.5,
             true,
             "https://youtu.be/1Umr4h5dn5I",
@@ -258,6 +279,14 @@ class CinemaApplicationTests {
         List<Showtime> showtimes = new ArrayList<>();
         showtimes.add(new Showtime(1, LocalDate.of(2024, 7, 30), LocalTime.of(12, 0), LocalTime.of(14,0), movie, auditorium));
         showtimeRepository.saveAll(showtimes);
+    }
+
+    @Test
+    void createComboFood() {
+        List<Combo> combo = new ArrayList<>();
+        combo.add(new Combo(1, "Combo Couple", " 02 Ly nước ngọt size L + 01 Hộp bắp + 1 Snack", "https://cdn.galaxycine.vn/media/2024/3/29/menuboard-coonline-2024-combo2-min_1711699866349.jpg", true, BigDecimal.valueOf(190000)));
+        combo.add(new Combo(2, "Combo FA", " 01 Ly nước ngọt size L + 01 Hộp bắp", "https://cdn.galaxycine.vn/media/2024/3/29/menuboard-coonline-2024-combo1-copy-min_1711699814762.jpg", true, BigDecimal.valueOf(150000)));
+        comboRepository.saveAll(combo);
     }
 
 }

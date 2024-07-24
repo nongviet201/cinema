@@ -25,8 +25,7 @@ public class Movie {
     @Column(columnDefinition = "TEXT")
     String description;
     String poster;
-    @Column(columnDefinition = "INT")
-    Duration duration;
+    int duration;
     double rating;
     boolean status;
     String trailer;
