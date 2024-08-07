@@ -25,9 +25,9 @@ public class Showtime {
 
     @ManyToOne
     @JoinColumn(name = "movies_id")
-    Movie movie;
+    private Movie movie;
 
     @ManyToOne
     @JoinColumn(name= "auditorium_id")
-    Auditorium auditorium;
+    private Auditorium auditorium;
 }

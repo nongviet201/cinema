@@ -1,4 +1,4 @@
-package com.example.cinema.model.entity.movie;
+package com.example.cinema.model.entity.cinema;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,13 +10,11 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "actors")
-public class Actor {
+@Table(name = "seat_type")
+public class SeatType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    private String avatar;
-    @Column(columnDefinition = "TEXT")
-    private String bio;
+    private long price;
 }

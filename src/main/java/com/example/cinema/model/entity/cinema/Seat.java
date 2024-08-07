@@ -1,7 +1,6 @@
 package com.example.cinema.model.entity.cinema;
 
 
-import com.example.cinema.model.enums.SeatType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,14 +15,16 @@ import lombok.*;
 public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
-    @Enumerated(EnumType.STRING)
-    SeatType type;
-    boolean status;
-    int seatRow;
-    String seatColumn;
+    private int id;
+    private boolean status;
+    private String seatRow;
+    private int seatColumn;
 
     @ManyToOne
     @JoinColumn(name= "auditorium_id")
-    Auditorium auditorium;
+    private Auditorium auditorium;
+
+    @ManyToOne
+    @JoinColumn(name = "seat_type_id")
+    private SeatType type;
 }

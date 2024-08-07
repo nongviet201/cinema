@@ -1,27 +1,24 @@
 package com.example.cinema;
 
+import com.example.cinema.model.entity.User;
 import com.example.cinema.model.entity.bill.Combo;
 import com.example.cinema.model.entity.cinema.*;
 import com.example.cinema.model.entity.movie.*;
 import com.example.cinema.model.enums.AuditoriumType;
-import com.example.cinema.model.enums.SeatType;
+import com.example.cinema.model.enums.UserRole;
 import com.example.cinema.repository.*;
-import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.lang.reflect.Array;
-import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @SpringBootTest
 class CinemaApplicationTests {
+
     @Autowired
     private CinemaRepository cinemaRepository;
     @Autowired
@@ -44,6 +41,27 @@ class CinemaApplicationTests {
     private ShowtimeRepository showtimeRepository;
     @Autowired
     private ComboRepository comboRepository;
+    @Autowired
+    private SeatTypeRepository seatTypeRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+    @Test
+    void createData() {
+        createCityData();
+        createCinemaData();
+        createAuditoriumData();
+        createGenresData();
+        createActorData();
+        crateActorsData1();
+        createDirectorsData();
+        createDirectorData1();
+        createCountryData();
+        createMovieData();
+        createShowTime();
+        createComboFood();
+        createUserData();
+    }
 
     @Test
     void createCityData() {
@@ -57,13 +75,9 @@ class CinemaApplicationTests {
     @Test
     void createCinemaData() {
         City hanoi = cityRepository.findById(1).orElse(null);
-        ;
         City bacGiang = cityRepository.findById(2).orElse(null);
-        ;
         City thaiNguyen = cityRepository.findById(3).orElse(null);
-        ;
         City caoBang = cityRepository.findById(4).orElse(null);
-        ;
 
 
         List<Cinema> cinemas = new ArrayList<>();
@@ -94,19 +108,28 @@ class CinemaApplicationTests {
     @Test
     void createSeatData(int row, int column, int auditoriumId) {
         Auditorium auditorium = auditoriumRepository.findById(auditoriumId);
-        for (int i = 1; i <= column; i++) {
-            for (int j = 1; j <= row; j++) {
+        createSeatTypeData();
+        SeatType seatType = seatTypeRepository.findById(1).orElse(null);
+        for (int i = 1; i <= row; i++) {
+            for (int j = 1; j <= column; j++) {
                 Seat seat = Seat.builder()
-                    .type(SeatType.GHE_THUONG)
+                    .type(seatType)
                     .status(true)
-                    .seatRow(j)
-                    .seatColumn(numberToLetter(i))
+                    .seatRow(numberToLetter(i))
+                    .seatColumn(j)
                     .auditorium(auditorium)
                     .build();
-                seatRepository.save(seat);
+                 seatRepository.save(seat);
             }
         }
     }
+
+    void createSeatTypeData() {
+        seatTypeRepository.save(new SeatType(1, "Ghế đơn", 50000));
+        seatTypeRepository.save(new SeatType(2, "Ghế VIP", 80000));
+        seatTypeRepository.save(new SeatType(3, "Ghế đôi", 160000));
+    }
+
     String numberToLetter(int number) {
         String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
             "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
@@ -237,9 +260,18 @@ class CinemaApplicationTests {
 
     @Test
     void createMovieData() {
+        Country my = countryRepository.findById(1).orElse(null);
+        Country nhatBan = countryRepository.findById(2).orElse(null);
         Country hanQuoc = countryRepository.findById(3).orElse(null);
-        List<Genre> genres = new ArrayList<>();
-        genres.add(genreRepository.findById(1).orElse(null));
+        Country thaiLan = countryRepository.findById(4).orElse(null);
+        Country vietNam = countryRepository.findById(5).orElse(null);
+
+        List<Genre> hanhDongGiaTuong = new ArrayList<>();
+        hanhDongGiaTuong.add(genreRepository.findById(1).orElse(null));
+        hanhDongGiaTuong.add(genreRepository.findById(2).orElse(null));
+
+        List<Genre> hanhdong = new ArrayList<>();
+        hanhdong.add(genreRepository.findById(1).orElse(null));
 
         List<Director> directors = new ArrayList<>();
         directors.add(directorRepository.findById(16).orElse(null));
@@ -255,17 +287,50 @@ class CinemaApplicationTests {
             "vay-ham-tren-khong",
             "Bộ phim hành động ly kỳ dựa trên sự kiện có thật với sự tham gia của Ha Jung Woo, Yeo Jin Goo và Sung Dong Il được dựa trên một sự kiện có thật năm 1971, khi một thanh niên Hàn Quốc định cướp một chiếc máy bay chở khách khởi hành từ thành phố cảnh phía đông Sokcho bay tới Seoul. Mọi người trên chuyến bay này đều đang đặt cược mạng sống của mình!",
             "https://cdn.galaxycine.vn/media/2024/7/19/hijack-1971-1_1721360469683.jpg",
+            "https://scontent.fhan2-4.fna.fbcdn.net/v/t39.30808-6/449715543_867718435389539_7700033430249682808_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeEdG602u7n5z_LchFTyMhkKvJf_tR34qT-8l_-1HfipP3u5ZLSaDV0F9guTZ3PcyYmKJYaJFritYmIqVVxpXNkx&_nc_ohc=Hw1LY44AyAgQ7kNvgGaVBQm&_nc_ht=scontent.fhan2-4.fna&gid=AW4bSONHb9_fR3yySZoNF7b&oh=00_AYBMI13AiUuE44-hy7Ub7LP1NhZtTPcBTx6fcknSgi71Sg&oe=66B071DE",
             120,
             8.5,
             true,
-            "https://youtu.be/1Umr4h5dn5I",
+            "https://www.youtube.com/embed/f9OeK-ruVVo?si=A2n-HyqQtcz4veZP",
             LocalDate.of(2024, 7, 19),
             LocalDate.of(2024, 7, 19),
             LocalDate.of(2024, 8, 19),
             LocalDate.now(),
             LocalDate.now(),
+            "Perfect Storm Film",
             hanQuoc,
-            genres,
+            hanhdong,
+            directors,
+            actors
+        ));
+        movies.add(new Movie(
+            2,
+            "Deadpool & Wolverine",
+            "Deadpool-&-Wolverine",
+            "<div class=\"block__wysiwyg text-black-10 text-sm font-normal not-italic content-text content__data__full\"><p style=\"text-align:justify; margin-bottom:11px\"><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><span style=\"line-height:150%\">Sau một số tác phẩm chưa đạt thành công như kì vọng gần đây, Marvel Studios ngày càng thận trọng khi ra mắt các dự án mới. Deadpool &amp; Wolverine chính là bộ phim Marvel duy nhất ra mắt năm 2024. Bộ phim là tác phẩm mà công chúng kì vọng sẽ cứu rỗi vũ trụ điện ảnh Marvel khỏi cơn thoái trào. Chính vì vậy, chẳng có gì ngạc nhiên khi Deadpool &amp; Wolverine được đầu tư, chăm chút hết sức kĩ lưỡng.</span></span></span></p>\n" +
+                "\n" +
+                "<p style=\"text-align:justify; margin-bottom:11px\"><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><span style=\"line-height:150%\">Sau teaser và trailer đầu tiên, cốt truyện Deadpool &amp; Wolverine dần dần hé lộ. Đặc sản “trứng phục sinh” bùng nổ ở trailer, khiến khán giả đồn đoán liên tục, gợi nhớ đến loạt tác phẩm quen thuộc như <i>Ant-Man</i>, <i>X-Men United</i>, <i>X-Men: First Class</i>, <i>Loki</i>…</span></span></span></p>\n" +
+                "\n" +
+                "<p style=\"text-align:justify; margin-bottom:11px\"><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><span style=\"line-height:150%\">Phản diện phần này là Cassandra Nova – em gái song sinh độc ác của giáo sư X. Ả sở hữu khả năng ngoại cảm cùng hàng tá kĩ năng dễ dàng đo ván Wolverine và Deadpool. Vai diễn nặng kí này Emma Corrin đảm nhận. Cô được biết đến khi trở thành vương phi Diana thời trẻ trong series truyền hình nổi tiếng The Crown. </span></span></span></p>\n" +
+                "\n" +
+                "<p style=\"text-align:justify; margin-bottom:11px\"><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><span style=\"line-height:150%\">Sau Tim Miller (Deadpool) và David Leitch (Deadpool 2), đạo diễn Shawn Levy của Real Steel và Free Guy là cái tên tiếp theo cầm trịch tác phẩm về gã phản anh hùng nói nhiều. Ryan Reynolds tiếp tục quay lại vai diễn mang tính biểu tượng trong sự nghiệp. Anh tham gia luôn khâu biên kịch cùng Rhett Reese, Paul Wernick, Zeb Wells và Shawn Levy. Hugh Jackman cũng tái xuất vai diễn dường như chẳng ai thay thế nổi – Wolverine. &nbsp;</span></span></span></p>\n" +
+                "\n" +
+                "<p><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><a href=\"https://www.galaxycine.vn/phim-dang-chieu\">Phim mới</a> <strong>Deadpool &amp; Wolverine</strong>&nbsp;ra mắt tại các <em><a href=\"https://www.galaxycine.vn/\">rạp chiếu phim</a></em> toàn quốc từ 27.07.2024.</span></span></p>\n" +
+                "</div>",
+            "https://cdn.galaxycine.vn/media/2024/7/22/deadpool--wolverine-500_1721640472363.jpg",
+            "https://preview.redd.it/deadpool-and-wolverine-textless-banner-wallpaper-v0-vs0sop0uel1d1.png?width=1080&crop=smart&auto=webp&s=4a91a3c67ea7fd049df61eb525ae81a60c14aec2",
+            127,
+            8.8,
+            true,
+            "https://www.youtube.com/embed/inIVdZSFfc0?si=_hGwWAt56i15OYmJ",
+            LocalDate.of(2024, 7, 27),
+            LocalDate.of(2024, 7, 27),
+            LocalDate.of(2024, 8, 27),
+            LocalDate.now(),
+            LocalDate.now(),
+            "Marvel Studios, 20th Century Studios",
+            my,
+            hanhDongGiaTuong,
             directors,
             actors
         ));
@@ -278,15 +343,22 @@ class CinemaApplicationTests {
         Auditorium auditorium = auditoriumRepository.findById(1);
         List<Showtime> showtimes = new ArrayList<>();
         showtimes.add(new Showtime(1, LocalDate.of(2024, 7, 30), LocalTime.of(12, 0), LocalTime.of(14,0), movie, auditorium));
+        showtimes.add(new Showtime(2, LocalDate.of(2024, 7, 30), LocalTime.of(14, 0), LocalTime.of(16,0), movie, auditorium));
+        showtimes.add(new Showtime(3, LocalDate.of(2024, 7, 29  ), LocalTime.of(14, 0), LocalTime.of(16,0), movie, auditorium));
         showtimeRepository.saveAll(showtimes);
     }
 
     @Test
     void createComboFood() {
         List<Combo> combo = new ArrayList<>();
-        combo.add(new Combo(1, "Combo Couple", " 02 Ly nước ngọt size L + 01 Hộp bắp + 1 Snack", "https://cdn.galaxycine.vn/media/2024/3/29/menuboard-coonline-2024-combo2-min_1711699866349.jpg", true, BigDecimal.valueOf(190000)));
-        combo.add(new Combo(2, "Combo FA", " 01 Ly nước ngọt size L + 01 Hộp bắp", "https://cdn.galaxycine.vn/media/2024/3/29/menuboard-coonline-2024-combo1-copy-min_1711699814762.jpg", true, BigDecimal.valueOf(150000)));
+        combo.add(new Combo(1, "Combo Couple", " 02 Ly nước ngọt size L + 01 Hộp bắp + 1 Snack", "https://cdn.galaxycine.vn/media/2024/3/29/menuboard-coonline-2024-combo2-min_1711699866349.jpg", true, 190000));
+        combo.add(new Combo(2, "Combo FA", " 01 Ly nước ngọt size L + 01 Hộp bắp", "https://cdn.galaxycine.vn/media/2024/3/29/menuboard-coonline-2024-combo1-copy-min_1711699814762.jpg", true, 190000));
         comboRepository.saveAll(combo);
     }
 
+    @Test
+    void createUserData() {
+        userRepository.save(new User(1, "admin","123", "admin.img", "admin@gmail.com", "Male", LocalDate.of(2001, 10, 22), UserRole.ADMIN, LocalDate.now(), LocalDate.now()));
+        userRepository.save(new User(2, "viet","123", "admin.img", "viet@gmail.com", "Male", LocalDate.of(2001, 10, 22), UserRole.USER, LocalDate.now(), LocalDate.now()));
+    }
 }
