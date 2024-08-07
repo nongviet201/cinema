@@ -1,4 +1,4 @@
-package com.example.cinema.model.entity;
+package com.example.cinema.model.entity.user;
 
 import com.example.cinema.model.enums.UserRole;
 import jakarta.persistence.*;
@@ -19,15 +19,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto tăng id
     private Integer id;
     @Column(nullable = false)
-    private String username;
+    private String fullName;
+    private String email;
     @Column(nullable = false)
     private String password;
     private String avatar;
-    private String email;
+    private String phoneNumber;
     private String gender;
     private LocalDate birthday;
     @Enumerated(EnumType.STRING)
     private UserRole role;
+    private boolean enabled;
     private LocalDate createAt;
     private LocalDate updateAt;
 }

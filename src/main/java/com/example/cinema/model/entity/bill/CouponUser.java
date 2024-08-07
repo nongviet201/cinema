@@ -1,6 +1,6 @@
 package com.example.cinema.model.entity.bill;
 
-import com.example.cinema.model.entity.User;
+import com.example.cinema.model.entity.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 

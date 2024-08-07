@@ -1,8 +1,8 @@
 package com.example.cinema.model.entity.bill;
 
-import com.example.cinema.model.entity.User;
 import com.example.cinema.model.entity.cinema.Seat;
 import com.example.cinema.model.entity.cinema.Showtime;
+import com.example.cinema.model.entity.user.User;
 import com.example.cinema.model.enums.ReservationType;
 import jakarta.persistence.*;
 import lombok.*;

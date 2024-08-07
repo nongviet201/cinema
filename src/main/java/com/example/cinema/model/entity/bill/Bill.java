@@ -1,8 +1,8 @@
 package com.example.cinema.model.entity.bill;
 
 
-import com.example.cinema.model.entity.User;
 import com.example.cinema.model.entity.cinema.Showtime;
+import com.example.cinema.model.entity.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,6 +24,7 @@ public class Bill {
     private long totalPrice;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
+    private Integer responseCode;
 
     @ManyToOne
     @JoinColumn(name= "user_id")
