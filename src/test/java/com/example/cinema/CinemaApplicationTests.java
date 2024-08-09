@@ -17,9 +17,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import static java.lang.Math.random;
 
 @SpringBootTest
 class CinemaApplicationTests {
+    Random random = new Random();
 
     @Autowired
     private CinemaRepository cinemaRepository;
@@ -82,34 +86,59 @@ class CinemaApplicationTests {
         City bacGiang = cityRepository.findById(2).orElse(null);
         City thaiNguyen = cityRepository.findById(3).orElse(null);
         City caoBang = cityRepository.findById(4).orElse(null);
+        City tpHCM = cityRepository.findById(5).orElse(null);
 
 
         List<Cinema> cinemas = new ArrayList<>();
-        cinemas.add(new Cinema(1, "Cinema Long Biên", "Hà Nội", hanoi));
-        cinemas.add(new Cinema(2, "Cinema Cầu Giấy", "Hà Nội", hanoi));
-        cinemas.add(new Cinema(3, "Cinema Thanh Xuân", "Hà Nội", hanoi));
-        cinemas.add(new Cinema(4, "Cinema Bắc Giang", "Bắc Giang", bacGiang));
-        cinemas.add(new Cinema(5, "Cinema Thái Nguyên", "Thái Nguyên", thaiNguyen));
-        cinemas.add(new Cinema(6, "Cinema Cao Bằng", "Cao Bằng", caoBang));
+        cinemas.add(new Cinema(1, "VCinema Long Biên", "Hà Nội", hanoi));
+        cinemas.add(new Cinema(2, "VCinema Cầu Giấy", "Hà Nội", hanoi));
+        cinemas.add(new Cinema(3, "VCinema Thanh Xuân", "Hà Nội", hanoi));
+
+        cinemas.add(new Cinema(4, "VCinema Bắc Giang I", "Bắc Giang", bacGiang));
+        cinemas.add(new Cinema(5, "VCinema Việt Yên", "Bắc Giang", bacGiang));
+        cinemas.add(new Cinema(6, "VCinema Quang Châu", "Bắc Giang", bacGiang));
+
+        cinemas.add(new Cinema(7, "VCinema Thái Nguyên", "Thái Nguyên", thaiNguyen));
+        cinemas.add(new Cinema(8, "VCinema Sông Công", "Thái Nguyên", thaiNguyen));
+        cinemas.add(new Cinema(9, "VCinema Phú Bình", "Thái Nguyên", thaiNguyen));
+
+        cinemas.add(new Cinema(10, "VCinema Cao Bằng", "Cao Bằng", caoBang));
+        cinemas.add(new Cinema(11, "VCinema Trùng Khánh", "Cao Bằng", caoBang));
+        cinemas.add(new Cinema(12, "VCinema Quảng Hòa", "Cao Bằng", caoBang));
+
+        cinemas.add(new Cinema(12, "VCinema Bình Thạnh", "TP. Hồ Chí Minh", tpHCM));
+        cinemas.add(new Cinema(13, "VCinema Gò Vấp", "TP. Hồ Chí Minh", tpHCM));
+        cinemas.add(new Cinema(14, "VCinema Tân Bình", "TP. Hồ Chí Minh", tpHCM));
+        cinemas.add(new Cinema(15, "VCinema Tân Phú", "TP. Hồ Chí Minh", tpHCM));
+        cinemas.add(new Cinema(16, "VCinema Phú NHuận", "TP. Hồ Chí Minh", tpHCM));
+
+
         cinemaRepository.saveAll(cinemas);
     }
 
     @Test
     void createAuditoriumData() {
         List<Auditorium> auditoriums = new ArrayList<>();
-        auditoriums.add(new Auditorium(1, "Room 1", 10, 12, AuditoriumType.NORMAL, cinemaRepository.findById(1)));
-        auditoriums.add(new Auditorium(2, "Room 2", 10, 12, AuditoriumType.NORMAL, cinemaRepository.findById(1)));
-        auditoriums.add(new Auditorium(3, "Room 3", 10, 12, AuditoriumType.NORMAL, cinemaRepository.findById(1)));
-        auditoriums.add(new Auditorium(4, "Room 1", 10, 12, AuditoriumType.IMAX, cinemaRepository.findById(2)));
-        auditoriums.add(new Auditorium(5, "Room 2", 10, 12, AuditoriumType.NORMAL, cinemaRepository.findById(2)));
-        auditoriums.add(new Auditorium(6, "Room 3", 10, 12, AuditoriumType.NORMAL, cinemaRepository.findById(2)));
-        auditoriumRepository.saveAll(auditoriums);
-        for (Auditorium auditorium : auditoriums) {
-            createSeatData(auditorium.getTotalRowChair(), auditorium.getTotalColumnChair(), auditorium.getId());
+        List<Cinema> cinemas = cinemaRepository.findAll();
+        int[] numbers = {3, 4, 5};
+        int[] rowChair = {10, 12, 13, 14};
+        AuditoriumType[] types = AuditoriumType.values();
+
+        for (Cinema cinema : cinemas) {
+            for (int i = 1; i <= numbers[random.nextInt(numbers.length)]; i++) {
+                Auditorium auditorium = Auditorium.builder()
+                        .name("Room "+i)
+                        .totalRowChair(rowChair[random.nextInt(rowChair.length)])
+                        .totalColumnChair(rowChair[random.nextInt(rowChair.length)] + numbers[random.nextInt(numbers.length)])
+                        .auditoriumType(types[random.nextInt(types.length)])
+                        .cinema(cinema)
+                        .build();
+                auditoriumRepository.save(auditorium);
+                createSeatData(auditorium.getTotalRowChair(), auditorium.getTotalColumnChair(), auditorium.getId());
+            }
         }
     }
 
-    @Test
     void createSeatData(int row, int column, int auditoriumId) {
         Auditorium auditorium = auditoriumRepository.findById(auditoriumId);
         createSeatTypeData();
@@ -310,6 +339,7 @@ class CinemaApplicationTests {
             1,
             "Vây Hãm Trên Không",
             "vay-ham-tren-khong", "Bộ phim hành động ly kỳ dựa trên sự kiện có thật với sự tham gia của Ha Jung Woo, Yeo Jin Goo và Sung Dong Il được dựa trên một sự kiện có thật năm 1971, khi một thanh niên Hàn Quốc định cướp một chiếc máy bay chở khách khởi hành từ thành phố cảnh phía đông Sokcho bay tới Seoul. Mọi người trên chuyến bay này đều đang đặt cược mạng sống của mình!", "https://cdn.galaxycine.vn/media/2024/7/19/hijack-1971-1_1721360469683.jpg", "https://cdn.galaxycine.vn/media/2024/7/19/hijack-1971-2_1721360477277.jpg",
+            16,
             120,
             8.5,
             true,
@@ -341,6 +371,7 @@ class CinemaApplicationTests {
                 "</div>",
             "https://cdn.galaxycine.vn/media/2024/7/22/deadpool--wolverine-500_1721640472363.jpg",
             "https://preview.redd.it/deadpool-and-wolverine-textless-banner-wallpaper-v0-vs0sop0uel1d1.png?width=1080&crop=smart&auto=webp&s=4a91a3c67ea7fd049df61eb525ae81a60c14aec2",
+            18,
             127,
             8.8,
             true,
@@ -352,22 +383,67 @@ class CinemaApplicationTests {
             LocalDate.now(),
             "Marvel Studios, 20th Century Studios", my, hanhDongGiaTuong, List.of(ShawnLevy), List.of(RyanReynolds, HughJackman, PatrickStewart)
         ));
-        movies.add(new Movie(3, "Thám Tử Lừng Danh Conan: Ngôi Sao 5 Cánh 1 Triệu Đô", "tham-tu-lung-danh-conan-ngoi-sao-5-canh-trieu-do", "<div class=\"block__wysiwyg text-black-10 text-sm font-normal not-italic content-text content__data__full\"><p><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\">Siêu trộm Kaito Kid và thám tử miền Tây Hattori Heiji cùng đối đầu trong cuộc tranh giành thanh kiếm thuộc về Hijikata Toushizou - phó chỉ huy của Shinsengumi! Thù mới hận cũ, Heiji sẽ xử trí Kid thế nào đây? </span></span></p>\n" + "\n" + "<p><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\">Ngoài ra, một bí mật kinh khủng về Kaito Kid sắp được tiếp lộ...</span></span><span style=\"font-family:Arial,Helvetica,sans-serif;\"><!--| --></span></p>\n" + "\n" + "<p><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><a href=\"https://www.galaxycine.vn/phim-dang-chieu/\">Phim mới</a>&nbsp;<strong>Thám Tử Lừng Danh Conan: Ngôi Sao 5 Cánh 1 Triệu Đô</strong>&nbsp;</span>suất chiếu sớm 27.07 (Không áp dụng Movie Voucher),<span style=\"font-family:Arial,Helvetica,sans-serif;\"> ra mắt tại các <em><a href=\"https://www.galaxycine.vn/\">rạp chiếu phim</a></em> toàn quốc từ 27.07.2024</span></span></p>\n" + "</div>", "https://cdn.galaxycine.vn/media/2024/8/2/detective-conan-the-million-dollar-pentagram-2_1722570544258.jpg", "https://cdn.galaxycine.vn/media/2024/8/2/detective-conan-the-million-dollar-pentagram-1_1722570550126.jpg", 111, 9.8, true, "https://www.youtube.com/embed/x_gGMJOppAo?si=b0BHAajHaXbTWolM", LocalDate.of(2024, 8, 2), LocalDate.of(2024, 8, 2), LocalDate.of(2024, 9, 2), LocalDate.now(), LocalDate.now(), "TMS Entertainment", vietNam, hoatHinh, List.of(nagaokaTomoka), List.of(TakayamaMinami, YamazakiWakana)));
-        movies.add(new Movie(4, "Mồ Tra Tấn", "mo-tra-tan", "<div class=\"block__wysiwyg text-black-10 text-sm font-normal not-italic content-text content__data__full\"><p><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><span style=\"font-variant: normal; white-space: pre-wrap;\"><span style=\"font-weight:400\"><span style=\"font-style:normal\"><span style=\"text-decoration:none\">Sau khi cha mẹ Sita thiệt mạng bất ngờ trong một vụ đánh bom liều chết, chỉ vì câu chuyện truyền miệng về Mồ Tra Tấn. Đau đớn và phẫn nộ, Sita quyết dành cả đời mình để chứng minh rằng Mồ Tra Tấn không tồn tại. Cho đến khi Sita quyết định ngủ trong ngôi mộ của một xác chết, sự thật kinh hoàng hé lộ, tất cả vượt xa sự hiểu biết của loài người...</span></span></span></span></span></span></p>\n" + "\n" + "<p><span style=\"font-size:14px;\"><a href=\"https://www.galaxycine.vn/phim-dang-chieu\">Phim mới</a>&nbsp;<strong>Grave Torture /&nbsp;Mồ Tra Tấn</strong>&nbsp;suất chiếu sớm 31.07 (Không áp dụng Movie Voucher), dự kiến ra mắt tại các <em><a href=\"https://www.galaxycine.vn/\">rạp chiếu phim</a></em> toàn quốc từ 02.08.2024.</span></p>\n" + "\n" + "<p><br>\n" + "<!--| --></p>\n" + "</div>", "https://cdn.galaxycine.vn/media/2024/7/25/grave-torture-1_1721895911608.jpg", "https://cdn.galaxycine.vn/media/2024/7/25/grave-torture-2_1721895914944.jpg", 81, 7.4, true, "https://www.youtube.com/embed/KKKK8qptIJc?si=ZxuCGYVguo1jDfNo", LocalDate.of(2024, 8, 2), LocalDate.of(2024, 8, 2), LocalDate.of(2024, 9, 2), LocalDate.now(), LocalDate.now(), "Come and See Pictures", indonesia, kinhDi, List.of(JokoAnwar), List.of(FaradinaMufti, RezaRahadian, ChristineHakim)));
+        movies.add(new Movie(3, "Thám Tử Lừng Danh Conan: Ngôi Sao 5 Cánh 1 Triệu Đô", "tham-tu-lung-danh-conan-ngoi-sao-5-canh-trieu-do", "<div class=\"block__wysiwyg text-black-10 text-sm font-normal not-italic content-text content__data__full\"><p><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\">Siêu trộm Kaito Kid và thám tử miền Tây Hattori Heiji cùng đối đầu trong cuộc tranh giành thanh kiếm thuộc về Hijikata Toushizou - phó chỉ huy của Shinsengumi! Thù mới hận cũ, Heiji sẽ xử trí Kid thế nào đây? </span></span></p>\n" + "\n" + "<p><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\">Ngoài ra, một bí mật kinh khủng về Kaito Kid sắp được tiếp lộ...</span></span><span style=\"font-family:Arial,Helvetica,sans-serif;\"><!--| --></span></p>\n" + "\n" + "<p><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><a href=\"https://www.galaxycine.vn/phim-dang-chieu/\">Phim mới</a>&nbsp;<strong>Thám Tử Lừng Danh Conan: Ngôi Sao 5 Cánh 1 Triệu Đô</strong>&nbsp;</span>suất chiếu sớm 27.07 (Không áp dụng Movie Voucher),<span style=\"font-family:Arial,Helvetica,sans-serif;\"> ra mắt tại các <em><a href=\"https://www.galaxycine.vn/\">rạp chiếu phim</a></em> toàn quốc từ 27.07.2024</span></span></p>\n" + "</div>", "https://cdn.galaxycine.vn/media/2024/8/2/detective-conan-the-million-dollar-pentagram-2_1722570544258.jpg", "https://cdn.galaxycine.vn/media/2024/8/2/detective-conan-the-million-dollar-pentagram-1_1722570550126.jpg", 13,111, 9.8, true, "https://www.youtube.com/embed/x_gGMJOppAo?si=b0BHAajHaXbTWolM", LocalDate.of(2024, 8, 2), LocalDate.of(2024, 8, 2), LocalDate.of(2024, 9, 2), LocalDate.now(), LocalDate.now(), "TMS Entertainment", vietNam, hoatHinh, List.of(nagaokaTomoka), List.of(TakayamaMinami, YamazakiWakana)));
+        movies.add(new Movie(4, "Mồ Tra Tấn", "mo-tra-tan", "<div class=\"block__wysiwyg text-black-10 text-sm font-normal not-italic content-text content__data__full\"><p><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><span style=\"font-variant: normal; white-space: pre-wrap;\"><span style=\"font-weight:400\"><span style=\"font-style:normal\"><span style=\"text-decoration:none\">Sau khi cha mẹ Sita thiệt mạng bất ngờ trong một vụ đánh bom liều chết, chỉ vì câu chuyện truyền miệng về Mồ Tra Tấn. Đau đớn và phẫn nộ, Sita quyết dành cả đời mình để chứng minh rằng Mồ Tra Tấn không tồn tại. Cho đến khi Sita quyết định ngủ trong ngôi mộ của một xác chết, sự thật kinh hoàng hé lộ, tất cả vượt xa sự hiểu biết của loài người...</span></span></span></span></span></span></p>\n" + "\n" + "<p><span style=\"font-size:14px;\"><a href=\"https://www.galaxycine.vn/phim-dang-chieu\">Phim mới</a>&nbsp;<strong>Grave Torture /&nbsp;Mồ Tra Tấn</strong>&nbsp;suất chiếu sớm 31.07 (Không áp dụng Movie Voucher), dự kiến ra mắt tại các <em><a href=\"https://www.galaxycine.vn/\">rạp chiếu phim</a></em> toàn quốc từ 02.08.2024.</span></p>\n" + "\n" + "<p><br>\n" + "<!--| --></p>\n" + "</div>", "https://cdn.galaxycine.vn/media/2024/7/25/grave-torture-1_1721895911608.jpg", "https://cdn.galaxycine.vn/media/2024/7/25/grave-torture-2_1721895914944.jpg", 18, 81, 7.4, true, "https://www.youtube.com/embed/KKKK8qptIJc?si=ZxuCGYVguo1jDfNo", LocalDate.of(2024, 8, 2), LocalDate.of(2024, 8, 2), LocalDate.of(2024, 9, 2), LocalDate.now(), LocalDate.now(), "Come and See Pictures", indonesia, kinhDi, List.of(JokoAnwar), List.of(FaradinaMufti, RezaRahadian, ChristineHakim)));
 
         movieRepository.saveAll(movies);
     }
 
+
     @Test
     void createShowTime() {
-        Movie movie = movieRepository.findById(1).orElse(null);
-        Auditorium auditorium = auditoriumRepository.findById(1);
-        List<Showtime> showtimes = new ArrayList<>();
-        showtimes.add(new Showtime(1, LocalDate.of(2024, 7, 30), LocalTime.of(12, 0), LocalTime.of(14,0), movie, auditorium));
-        showtimes.add(new Showtime(2, LocalDate.of(2024, 7, 30), LocalTime.of(14, 0), LocalTime.of(16,0), movie, auditorium));
-        showtimes.add(new Showtime(3, LocalDate.of(2024, 7, 29  ), LocalTime.of(14, 0), LocalTime.of(16,0), movie, auditorium));
-        showtimeRepository.saveAll(showtimes);
+        // Mảng các số giờ có thể dùng để nhân với giờ bắt đầu
+        int[] numbers = {2, 3};
+
+
+        int[] numShowtime = {1, 2};
+
+        // Lấy danh sách phim và rạp
+        List<Movie> movies = movieRepository.findAll();
+        List<Cinema> cinemas = cinemaRepository.findAll();
+
+        // Duyệt từng phim
+        for (Movie movie : movies) {
+            // Tạo lịch chiếu cho từng ngày trong 4 ngày tới
+            for (int i = 0; i <= 3; i++) {
+                LocalDate date = LocalDate.now().plusDays(i);
+
+                // Duyệt từng rạp
+                for (Cinema cinema : cinemas) {
+                    List<Auditorium> auditoriums = auditoriumRepository.findAllByCinema_Id(cinema.getId());
+                    int hour = 8;
+                    // Duyệt từng phòng chiếu trong rạp
+                    for (Auditorium aud : auditoriums) {
+                        // Tạo các suất chiếu trong ngày
+                        for (int j = 0; j <= numShowtime[random.nextInt(numShowtime.length)]; j++) {
+                            if (hour >= 24) {
+                                break; // Nếu giờ >= 24, thoát khỏi vòng lặp chiếu
+                            }
+                            LocalTime startTime = LocalTime.of(hour, 0);
+
+                            // Tính thời gian kết thúc chiếu phim
+                            LocalTime endTime = startTime.plusMinutes(movie.getDuration() + 10);
+
+                            // Lưu suất chiếu
+                            showtimeRepository.save(
+                                    Showtime.builder()
+                                            .screeningDate(date)
+                                            .startTime(startTime)
+                                            .endTime(endTime)
+                                            .movie(movie)
+                                            .auditorium(aud)
+                                            .build()
+                            );
+
+                            // Cập nhật giờ bắt đầu cho suất chiếu tiếp theo
+                            hour += numbers[random.nextInt(numbers.length)];
+                        }
+                    }
+                }
+            }
+        }
     }
+
 
     @Test
     void createComboFood() {

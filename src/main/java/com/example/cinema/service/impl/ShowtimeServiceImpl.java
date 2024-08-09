@@ -22,7 +22,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
     @Override
     public List<Showtime> getShowtimeByMovieIdAndCityId(int movieId, int cityId) {
-        // Tìm kiếm danh sách rạp chiếu phim trong thành phố có cityId
+/*        // Tìm kiếm danh sách rạp chiếu phim trong thành phố có cityId
         List<Cinema> cinemas = cinemaRepository.findAllByCity_Id(cityId);
 
         // Lấy danh sách tất cả các phòng chiếu của các rạp tương ứng
@@ -33,6 +33,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
         List<Integer> auditoriumIds = auditoriums.stream().map(Auditorium::getId).collect(Collectors.toList());
         List<Showtime> showtimes = showtimeRepository.findAllByMovie_IdAndAuditorium_IdIn(movieId, auditoriumIds);
 
-        return showtimes;
+        return showtimes;*/
+        return null;
     }
 }

@@ -10,5 +10,5 @@ import java.util.List;
 public interface AuditoriumRepository extends JpaRepository<Auditorium, Integer> {
     Auditorium findById(int id);
 
-    List<Auditorium> findAllByCinema_IdIn(List<Integer> cinemaIds);
+    List<Auditorium> findAllByCinema_Id(Integer cinemaIds);
 }
