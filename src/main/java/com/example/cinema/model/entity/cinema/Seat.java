@@ -1,6 +1,7 @@
 package com.example.cinema.model.entity.cinema;
 
 
+import com.example.cinema.model.enums.SeatType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,12 +20,10 @@ public class Seat {
     private boolean status;
     private String seatRow;
     private int seatColumn;
+    @Enumerated(EnumType.STRING)
+    private SeatType type;
 
     @ManyToOne
     @JoinColumn(name= "auditorium_id")
     private Auditorium auditorium;
-
-    @ManyToOne
-    @JoinColumn(name = "seat_type_id")
-    private SeatType type;
 }

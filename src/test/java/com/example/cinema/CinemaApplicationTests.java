@@ -1,13 +1,12 @@
 package com.example.cinema;
 
 import com.example.cinema.model.entity.Post;
+import com.example.cinema.model.entity.bill.BaseTicketPrice;
 import com.example.cinema.model.entity.bill.Combo;
 import com.example.cinema.model.entity.cinema.*;
 import com.example.cinema.model.entity.movie.*;
 import com.example.cinema.model.entity.user.User;
-import com.example.cinema.model.enums.AuditoriumType;
-import com.example.cinema.model.enums.PostType;
-import com.example.cinema.model.enums.UserRole;
+import com.example.cinema.model.enums.*;
 import com.example.cinema.repository.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static java.lang.Math.random;
-
 @SpringBootTest
 class CinemaApplicationTests {
     Random random = new Random();
 
+    @Autowired
+    private BaseTicketPriceRepository baseTicketPriceRepository;
     @Autowired
     private CinemaRepository cinemaRepository;
     @Autowired
@@ -47,8 +46,6 @@ class CinemaApplicationTests {
     private ShowtimeRepository showtimeRepository;
     @Autowired
     private ComboRepository comboRepository;
-    @Autowired
-    private SeatTypeRepository seatTypeRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -121,7 +118,7 @@ class CinemaApplicationTests {
         List<Auditorium> auditoriums = new ArrayList<>();
         List<Cinema> cinemas = cinemaRepository.findAll();
         int[] numbers = {3, 4, 5};
-        int[] rowChair = {10, 12, 13, 14};
+        int[] rowChair = {10, 12, 13};
         AuditoriumType[] types = AuditoriumType.values();
 
         for (Cinema cinema : cinemas) {
@@ -142,9 +139,21 @@ class CinemaApplicationTests {
     void createSeatData(int row, int column, int auditoriumId) {
         Auditorium auditorium = auditoriumRepository.findById(auditoriumId);
         createSeatTypeData();
-        SeatType seatType = seatTypeRepository.findById(1).orElse(null);
+        SeatType seatType;
+
+        int[] numbers = {5, 6, 7};
+
+
         for (int i = 1; i <= row; i++) {
             for (int j = 1; j <= column; j++) {
+                if (i == 1) {
+                    seatType = SeatType.COUPLE;
+                } else if (i > 1 && i <= numbers[random.nextInt(numbers.length)]) {
+                    seatType = SeatType.VIP;
+                } else {
+                    seatType = SeatType.NORMAL;
+                }
+
                 Seat seat = Seat.builder()
                     .type(seatType)
                     .status(true)
@@ -158,9 +167,7 @@ class CinemaApplicationTests {
     }
 
     void createSeatTypeData() {
-        seatTypeRepository.save(new SeatType(1, "Ghế đơn", 50000));
-        seatTypeRepository.save(new SeatType(2, "Ghế VIP", 80000));
-        seatTypeRepository.save(new SeatType(3, "Ghế đôi", 160000));
+
     }
 
     String numberToLetter(int number) {
@@ -333,60 +340,171 @@ class CinemaApplicationTests {
         Actor RezaRahadian = actorRepository.save(Actor.builder().name("Reza Rahadian").bio("đang cập nhật...").avatar("avatar.png").build());
         Actor FaradinaMufti = actorRepository.save(Actor.builder().name("Faradina Mufti").bio("đang cập nhật...").avatar("avatar.png").build());
 
+        movieRepository.save(
+            Movie.builder()
+                .name("Vây Hãm Trên Không")
+                .slug("vay-ham-tren-khong")
+                .description("Bộ phim hành động ly kỳ dựa trên sự kiện có thật với sự tham gia của Ha Jung Woo, Yeo Jin Goo và Sung Dong Il được dựa trên một sự kiện có thật năm 1971, khi một thanh niên Hàn Quốc định cướp một chiếc máy bay chở khách khởi hành từ thành phố cảnh phía đông Sokcho bay tới Seoul. Mọi người trên chuyến bay này đều đang đặt cược mạng sống của mình!")
+                .poster("https://cdn.galaxycine.vn/media/2024/7/19/hijack-1971-1_1721360469683.jpg")
+                .bannerImg("https://cdn.galaxycine.vn/media/2024/7/19/hijack-1971-2_1721360477277.jpg")
+                .trailer("https://www.youtube.com/embed/f9OeK-ruVVo?si=A2n-HyqQtcz4veZP")
+                .ageRequirement(16)
+                .duration(120)
+                .rating(8.5)
+                .status(true)
+                .releaseDate(LocalDate.of(2024, 7, 19))
+                .startAt(LocalDate.of(2024, 7, 19))
+                .endAt(LocalDate.of(2024, 8, 19))
+                .createdAt(LocalDate.now())
+                .updatedAt(LocalDate.now())
+                .producer("Perfect Storm Film")
+                .graphicsType(List.of(GraphicsType._2D))
+                .translationsType(List.of(TranslationType.PHỤ_ĐỀ))
+                .country(hanQuoc)
+                .genres(hanhdong)
+                .directors(directors)
+                .actors(actors)
+                .build()
+        );
 
-        List<Movie> movies = new ArrayList<>();
-        movies.add(new Movie(
-            1,
-            "Vây Hãm Trên Không",
-            "vay-ham-tren-khong", "Bộ phim hành động ly kỳ dựa trên sự kiện có thật với sự tham gia của Ha Jung Woo, Yeo Jin Goo và Sung Dong Il được dựa trên một sự kiện có thật năm 1971, khi một thanh niên Hàn Quốc định cướp một chiếc máy bay chở khách khởi hành từ thành phố cảnh phía đông Sokcho bay tới Seoul. Mọi người trên chuyến bay này đều đang đặt cược mạng sống của mình!", "https://cdn.galaxycine.vn/media/2024/7/19/hijack-1971-1_1721360469683.jpg", "https://cdn.galaxycine.vn/media/2024/7/19/hijack-1971-2_1721360477277.jpg",
-            16,
-            120,
-            8.5,
-            true,
-            "https://www.youtube.com/embed/f9OeK-ruVVo?si=A2n-HyqQtcz4veZP",
-            LocalDate.of(2024, 7, 19),
-            LocalDate.of(2024, 7, 19),
-            LocalDate.of(2024, 8, 19),
-            LocalDate.now(),
-            LocalDate.now(),
-            "Perfect Storm Film",
-            hanQuoc,
-            hanhdong,
-            directors,
-            actors
-        ));
-        movies.add(new Movie(
-            2,
-            "Deadpool & Wolverine",
-            "Deadpool-&-Wolverine",
-            "<div class=\"block__wysiwyg text-black-10 text-sm font-normal not-italic content-text content__data__full\"><p style=\"text-align:justify; margin-bottom:11px\"><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><span style=\"line-height:150%\">Sau một số tác phẩm chưa đạt thành công như kì vọng gần đây, Marvel Studios ngày càng thận trọng khi ra mắt các dự án mới. Deadpool &amp; Wolverine chính là bộ phim Marvel duy nhất ra mắt năm 2024. Bộ phim là tác phẩm mà công chúng kì vọng sẽ cứu rỗi vũ trụ điện ảnh Marvel khỏi cơn thoái trào. Chính vì vậy, chẳng có gì ngạc nhiên khi Deadpool &amp; Wolverine được đầu tư, chăm chút hết sức kĩ lưỡng.</span></span></span></p>\n" +
-                "\n" +
-                "<p style=\"text-align:justify; margin-bottom:11px\"><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><span style=\"line-height:150%\">Sau teaser và trailer đầu tiên, cốt truyện Deadpool &amp; Wolverine dần dần hé lộ. Đặc sản “trứng phục sinh” bùng nổ ở trailer, khiến khán giả đồn đoán liên tục, gợi nhớ đến loạt tác phẩm quen thuộc như <i>Ant-Man</i>, <i>X-Men United</i>, <i>X-Men: First Class</i>, <i>Loki</i>…</span></span></span></p>\n" +
-                "\n" +
-                "<p style=\"text-align:justify; margin-bottom:11px\"><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><span style=\"line-height:150%\">Phản diện phần này là Cassandra Nova – em gái song sinh độc ác của giáo sư X. Ả sở hữu khả năng ngoại cảm cùng hàng tá kĩ năng dễ dàng đo ván Wolverine và Deadpool. Vai diễn nặng kí này Emma Corrin đảm nhận. Cô được biết đến khi trở thành vương phi Diana thời trẻ trong series truyền hình nổi tiếng The Crown. </span></span></span></p>\n" +
-                "\n" +
-                "<p style=\"text-align:justify; margin-bottom:11px\"><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><span style=\"line-height:150%\">Sau Tim Miller (Deadpool) và David Leitch (Deadpool 2), đạo diễn Shawn Levy của Real Steel và Free Guy là cái tên tiếp theo cầm trịch tác phẩm về gã phản anh hùng nói nhiều. Ryan Reynolds tiếp tục quay lại vai diễn mang tính biểu tượng trong sự nghiệp. Anh tham gia luôn khâu biên kịch cùng Rhett Reese, Paul Wernick, Zeb Wells và Shawn Levy. Hugh Jackman cũng tái xuất vai diễn dường như chẳng ai thay thế nổi – Wolverine. &nbsp;</span></span></span></p>\n" +
-                "\n" +
-                "<p><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><a href=\"https://www.galaxycine.vn/phim-dang-chieu\">Phim mới</a> <strong>Deadpool &amp; Wolverine</strong>&nbsp;ra mắt tại các <em><a href=\"https://www.galaxycine.vn/\">rạp chiếu phim</a></em> toàn quốc từ 27.07.2024.</span></span></p>\n" +
-                "</div>",
-            "https://cdn.galaxycine.vn/media/2024/7/22/deadpool--wolverine-500_1721640472363.jpg",
-            "https://preview.redd.it/deadpool-and-wolverine-textless-banner-wallpaper-v0-vs0sop0uel1d1.png?width=1080&crop=smart&auto=webp&s=4a91a3c67ea7fd049df61eb525ae81a60c14aec2",
-            18,
-            127,
-            8.8,
-            true,
-            "https://www.youtube.com/embed/inIVdZSFfc0?si=_hGwWAt56i15OYmJ",
-            LocalDate.of(2024, 7, 27),
-            LocalDate.of(2024, 7, 27),
-            LocalDate.of(2024, 8, 27),
-            LocalDate.now(),
-            LocalDate.now(),
-            "Marvel Studios, 20th Century Studios", my, hanhDongGiaTuong, List.of(ShawnLevy), List.of(RyanReynolds, HughJackman, PatrickStewart)
-        ));
-        movies.add(new Movie(3, "Thám Tử Lừng Danh Conan: Ngôi Sao 5 Cánh 1 Triệu Đô", "tham-tu-lung-danh-conan-ngoi-sao-5-canh-trieu-do", "<div class=\"block__wysiwyg text-black-10 text-sm font-normal not-italic content-text content__data__full\"><p><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\">Siêu trộm Kaito Kid và thám tử miền Tây Hattori Heiji cùng đối đầu trong cuộc tranh giành thanh kiếm thuộc về Hijikata Toushizou - phó chỉ huy của Shinsengumi! Thù mới hận cũ, Heiji sẽ xử trí Kid thế nào đây? </span></span></p>\n" + "\n" + "<p><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\">Ngoài ra, một bí mật kinh khủng về Kaito Kid sắp được tiếp lộ...</span></span><span style=\"font-family:Arial,Helvetica,sans-serif;\"><!--| --></span></p>\n" + "\n" + "<p><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><a href=\"https://www.galaxycine.vn/phim-dang-chieu/\">Phim mới</a>&nbsp;<strong>Thám Tử Lừng Danh Conan: Ngôi Sao 5 Cánh 1 Triệu Đô</strong>&nbsp;</span>suất chiếu sớm 27.07 (Không áp dụng Movie Voucher),<span style=\"font-family:Arial,Helvetica,sans-serif;\"> ra mắt tại các <em><a href=\"https://www.galaxycine.vn/\">rạp chiếu phim</a></em> toàn quốc từ 27.07.2024</span></span></p>\n" + "</div>", "https://cdn.galaxycine.vn/media/2024/8/2/detective-conan-the-million-dollar-pentagram-2_1722570544258.jpg", "https://cdn.galaxycine.vn/media/2024/8/2/detective-conan-the-million-dollar-pentagram-1_1722570550126.jpg", 13,111, 9.8, true, "https://www.youtube.com/embed/x_gGMJOppAo?si=b0BHAajHaXbTWolM", LocalDate.of(2024, 8, 2), LocalDate.of(2024, 8, 2), LocalDate.of(2024, 9, 2), LocalDate.now(), LocalDate.now(), "TMS Entertainment", vietNam, hoatHinh, List.of(nagaokaTomoka), List.of(TakayamaMinami, YamazakiWakana)));
-        movies.add(new Movie(4, "Mồ Tra Tấn", "mo-tra-tan", "<div class=\"block__wysiwyg text-black-10 text-sm font-normal not-italic content-text content__data__full\"><p><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><span style=\"font-variant: normal; white-space: pre-wrap;\"><span style=\"font-weight:400\"><span style=\"font-style:normal\"><span style=\"text-decoration:none\">Sau khi cha mẹ Sita thiệt mạng bất ngờ trong một vụ đánh bom liều chết, chỉ vì câu chuyện truyền miệng về Mồ Tra Tấn. Đau đớn và phẫn nộ, Sita quyết dành cả đời mình để chứng minh rằng Mồ Tra Tấn không tồn tại. Cho đến khi Sita quyết định ngủ trong ngôi mộ của một xác chết, sự thật kinh hoàng hé lộ, tất cả vượt xa sự hiểu biết của loài người...</span></span></span></span></span></span></p>\n" + "\n" + "<p><span style=\"font-size:14px;\"><a href=\"https://www.galaxycine.vn/phim-dang-chieu\">Phim mới</a>&nbsp;<strong>Grave Torture /&nbsp;Mồ Tra Tấn</strong>&nbsp;suất chiếu sớm 31.07 (Không áp dụng Movie Voucher), dự kiến ra mắt tại các <em><a href=\"https://www.galaxycine.vn/\">rạp chiếu phim</a></em> toàn quốc từ 02.08.2024.</span></p>\n" + "\n" + "<p><br>\n" + "<!--| --></p>\n" + "</div>", "https://cdn.galaxycine.vn/media/2024/7/25/grave-torture-1_1721895911608.jpg", "https://cdn.galaxycine.vn/media/2024/7/25/grave-torture-2_1721895914944.jpg", 18, 81, 7.4, true, "https://www.youtube.com/embed/KKKK8qptIJc?si=ZxuCGYVguo1jDfNo", LocalDate.of(2024, 8, 2), LocalDate.of(2024, 8, 2), LocalDate.of(2024, 9, 2), LocalDate.now(), LocalDate.now(), "Come and See Pictures", indonesia, kinhDi, List.of(JokoAnwar), List.of(FaradinaMufti, RezaRahadian, ChristineHakim)));
+        movieRepository.save(
+            Movie.builder()
+                .name("Deadpool & Wolverine")
+                .slug("Deadpool-&-Wolverine")
+                .description("<div class=\"block__wysiwyg text-black-10 text-sm font-normal not-italic content-text content__data__full\"><p style=\"text-align:justify; margin-bottom:11px\"><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><span style=\"line-height:150%\">Sau một số tác phẩm chưa đạt thành công như kì vọng gần đây, Marvel Studios ngày càng thận trọng khi ra mắt các dự án mới. Deadpool &amp; Wolverine chính là bộ phim Marvel duy nhất ra mắt năm 2024. Bộ phim là tác phẩm mà công chúng kì vọng sẽ cứu rỗi vũ trụ điện ảnh Marvel khỏi cơn thoái trào. Chính vì vậy, chẳng có gì ngạc nhiên khi Deadpool &amp; Wolverine được đầu tư, chăm chút hết sức kĩ lưỡng.</span></span></span></p>\n" +
+                    "\n" +
+                    "<p style=\"text-align:justify; margin-bottom:11px\"><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><span style=\"line-height:150%\">Sau teaser và trailer đầu tiên, cốt truyện Deadpool &amp; Wolverine dần dần hé lộ. Đặc sản “trứng phục sinh” bùng nổ ở trailer, khiến khán giả đồn đoán liên tục, gợi nhớ đến loạt tác phẩm quen thuộc như <i>Ant-Man</i>, <i>X-Men United</i>, <i>X-Men: First Class</i>, <i>Loki</i>…</span></span></span></p>\n" +
+                    "\n" +
+                    "<p style=\"text-align:justify; margin-bottom:11px\"><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><span style=\"line-height:150%\">Phản diện phần này là Cassandra Nova – em gái song sinh độc ác của giáo sư X. Ả sở hữu khả năng ngoại cảm cùng hàng tá kĩ năng dễ dàng đo ván Wolverine và Deadpool. Vai diễn nặng kí này Emma Corrin đảm nhận. Cô được biết đến khi trở thành vương phi Diana thời trẻ trong series truyền hình nổi tiếng The Crown. </span></span></span></p>\n" +
+                    "\n" +
+                    "<p style=\"text-align:justify; margin-bottom:11px\"><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><span style=\"line-height:150%\">Sau Tim Miller (Deadpool) và David Leitch (Deadpool 2), đạo diễn Shawn Levy của Real Steel và Free Guy là cái tên tiếp theo cầm trịch tác phẩm về gã phản anh hùng nói nhiều. Ryan Reynolds tiếp tục quay lại vai diễn mang tính biểu tượng trong sự nghiệp. Anh tham gia luôn khâu biên kịch cùng Rhett Reese, Paul Wernick, Zeb Wells và Shawn Levy. Hugh Jackman cũng tái xuất vai diễn dường như chẳng ai thay thế nổi – Wolverine. &nbsp;</span></span></span></p>\n" +
+                    "\n" +
+                    "<p><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><a href=\"https://www.galaxycine.vn/phim-dang-chieu\">Phim mới</a> <strong>Deadpool &amp; Wolverine</strong>&nbsp;ra mắt tại các <em><a href=\"https://www.galaxycine.vn/\">rạp chiếu phim</a></em> toàn quốc từ 27.07.2024.</span></span></p>\n" +
+                    "</div>")
+                .poster("https://cdn.galaxycine.vn/media/2024/7/22/deadpool--wolverine-500_1721640472363.jpg")
+                .bannerImg("https://preview.redd.it/deadpool-and-wolverine-textless-banner-wallpaper-v0-vs0sop0uel1d1.png?width=1080&crop=smart&auto=webp&s=4a91a3c67ea7fd049df61eb525ae81a60c14aec2")
+                .trailer("https://www.youtube.com/embed/inIVdZSFfc0?si=_hGwWAt56i15OYmJ")
+                .ageRequirement(18)
+                .duration(127)
+                .rating(8.8)
+                .status(true)
+                .releaseDate(LocalDate.of(2024, 7, 27))
+                .startAt(LocalDate.of(2024, 7, 27))
+                .endAt(LocalDate.of(2024, 8, 27))
+                .createdAt(LocalDate.now())
+                .updatedAt(LocalDate.now())
+                .producer("Marvel Studios, 20th Century Studios")
+                .graphicsType(List.of(GraphicsType._2D, GraphicsType._3D))
+                .translationsType(List.of(TranslationType.PHỤ_ĐỀ))
+                .country(my)
+                .genres(hanhDongGiaTuong)
+                .directors(List.of(ShawnLevy))
+                .actors(List.of(RyanReynolds, HughJackman, PatrickStewart))
+                .build()
+        );
 
-        movieRepository.saveAll(movies);
+       movieRepository.save(
+            Movie.builder()
+                .name("Deadpool & Wolverine")
+                .slug("Deadpool-&-Wolverine")
+                .description("<div class=\"block__wysiwyg text-black-10 text-sm font-normal not-italic content-text content__data__full\"><p style=\"text-align:justify; margin-bottom:11px\"><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><span style=\"line-height:150%\">Sau một số tác phẩm chưa đạt thành công như kì vọng gần đây, Marvel Studios ngày càng thận trọng khi ra mắt các dự án mới. Deadpool &amp; Wolverine chính là bộ phim Marvel duy nhất ra mắt năm 2024. Bộ phim là tác phẩm mà công chúng kì vọng sẽ cứu rỗi vũ trụ điện ảnh Marvel khỏi cơn thoái trào. Chính vì vậy, chẳng có gì ngạc nhiên khi Deadpool &amp; Wolverine được đầu tư, chăm chút hết sức kĩ lưỡng.</span></span></span></p>\n" +
+                    "\n" +
+                    "<p style=\"text-align:justify; margin-bottom:11px\"><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><span style=\"line-height:150%\">Sau teaser và trailer đầu tiên, cốt truyện Deadpool &amp; Wolverine dần dần hé lộ. Đặc sản “trứng phục sinh” bùng nổ ở trailer, khiến khán giả đồn đoán liên tục, gợi nhớ đến loạt tác phẩm quen thuộc như <i>Ant-Man</i>, <i>X-Men United</i>, <i>X-Men: First Class</i>, <i>Loki</i>…</span></span></span></p>\n" +
+                    "\n" +
+                    "<p style=\"text-align:justify; margin-bottom:11px\"><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><span style=\"line-height:150%\">Phản diện phần này là Cassandra Nova – em gái song sinh độc ác của giáo sư X. Ả sở hữu khả năng ngoại cảm cùng hàng tá kĩ năng dễ dàng đo ván Wolverine và Deadpool. Vai diễn nặng kí này Emma Corrin đảm nhận. Cô được biết đến khi trở thành vương phi Diana thời trẻ trong series truyền hình nổi tiếng The Crown. </span></span></span></p>\n" +
+                    "\n" +
+                    "<p style=\"text-align:justify; margin-bottom:11px\"><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><span style=\"line-height:150%\">Sau Tim Miller (Deadpool) và David Leitch (Deadpool 2), đạo diễn Shawn Levy của Real Steel và Free Guy là cái tên tiếp theo cầm trịch tác phẩm về gã phản anh hùng nói nhiều. Ryan Reynolds tiếp tục quay lại vai diễn mang tính biểu tượng trong sự nghiệp. Anh tham gia luôn khâu biên kịch cùng Rhett Reese, Paul Wernick, Zeb Wells và Shawn Levy. Hugh Jackman cũng tái xuất vai diễn dường như chẳng ai thay thế nổi – Wolverine. &nbsp;</span></span></span></p>\n" +
+                    "\n" +
+                    "<p><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><a href=\"https://www.galaxycine.vn/phim-dang-chieu\">Phim mới</a> <strong>Deadpool &amp; Wolverine</strong>&nbsp;ra mắt tại các <em><a href=\"https://www.galaxycine.vn/\">rạp chiếu phim</a></em> toàn quốc từ 27.07.2024.</span></span></p>\n" +
+                    "</div>")
+                .poster("https://cdn.galaxycine.vn/media/2024/7/22/deadpool--wolverine-500_1721640472363.jpg")
+                .bannerImg("https://preview.redd.it/deadpool-and-wolverine-textless-banner-wallpaper-v0-vs0sop0uel1d1.png?width=1080&crop=smart&auto=webp&s=4a91a3c67ea7fd049df61eb525ae81a60c14aec2")
+                .trailer("https://www.youtube.com/embed/inIVdZSFfc0?si=_hGwWAt56i15OYmJ")
+                .ageRequirement(18)
+                .duration(127)
+                .rating(8.8)
+                .status(true)
+                .releaseDate(LocalDate.of(2024, 7, 27))
+                .startAt(LocalDate.of(2024, 7, 27))
+                .endAt(LocalDate.of(2024, 8, 27))
+                .createdAt(LocalDate.now())
+                .updatedAt(LocalDate.now())
+                .producer("Marvel Studios, 20th Century Studios")
+                .graphicsType(List.of(GraphicsType._2D, GraphicsType._3D))
+                .translationsType(List.of(TranslationType.PHỤ_ĐỀ))
+                .country(my)
+                .genres(hanhDongGiaTuong)
+                .directors(List.of(ShawnLevy))
+                .actors(List.of(RyanReynolds, HughJackman, PatrickStewart))
+                .build()
+        );
+
+        movieRepository.save(
+            Movie.builder()
+                .name("Thám Tử Lừng Danh Conan: Ngôi Sao 5 Cánh 1 Triệu Đô")
+                .slug("tham-tu-lung-danh-conan-ngoi-sao-5-canh-trieu-do")
+                .description("<div class=\"block__wysiwyg text-black-10 text-sm font-normal not-italic content-text content__data__full\"><p><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\">Siêu trộm Kaito Kid và thám tử miền Tây Hattori Heiji cùng đối đầu trong cuộc tranh giành thanh kiếm thuộc về Hijikata Toushizou - phó chỉ huy của Shinsengumi! Thù mới hận cũ, Heiji sẽ xử trí Kid thế nào đây? </span></span></p>\n" +
+                    "\n" +
+                    "<p><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\">Ngoài ra, một bí mật kinh khủng về Kaito Kid sắp được tiếp lộ...</span></span><span style=\"font-family:Arial,Helvetica,sans-serif;\"><!--| --></span></p>\n" +
+                    "\n" +
+                    "<p><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><a href=\"https://www.galaxycine.vn/phim-dang-chieu/\">Phim mới</a>&nbsp;<strong>Thám Tử Lừng Danh Conan: Ngôi Sao 5 Cánh 1 Triệu Đô</strong>&nbsp;</span>suất chiếu sớm 27.07 (Không áp dụng Movie Voucher),<span style=\"font-family:Arial,Helvetica,sans-serif;\"> ra mắt tại các <em><a href=\"https://www.galaxycine.vn/\">rạp chiếu phim</a></em> toàn quốc từ 27.07.2024</span></span></p>\n" +
+                    "</div>")
+                .poster("https://cdn.galaxycine.vn/media/2024/8/2/detective-conan-the-million-dollar-pentagram-2_1722570544258.jpg")
+                .bannerImg("https://cdn.galaxycine.vn/media/2024/8/2/detective-conan-the-million-dollar-pentagram-1_1722570550126.jpg")
+                .ageRequirement(13)
+                .duration(111)
+                .rating(9.8)
+                .status(true)
+                .trailer("https://www.youtube.com/embed/x_gGMJOppAo?si=b0BHAajHaXbTWolM")
+                .releaseDate(LocalDate.of(2024, 8, 2))
+                .startAt(LocalDate.of(2024, 8, 2))
+                .endAt(LocalDate.of(2024, 9, 2))
+                .createdAt(LocalDate.now())
+                .updatedAt(LocalDate.now())
+                .producer("TMS Entertainment")
+                .country(nhatBan)
+                .graphicsType(List.of(GraphicsType._2D))
+                .translationsType(List.of(TranslationType.LỒNG_TIẾNG))
+                .genres(hoatHinh)
+                .directors(List.of(nagaokaTomoka))
+                .actors(List.of(TakayamaMinami, YamazakiWakana))
+                .build()
+        );
+
+        movieRepository.save(
+            Movie.builder()
+                .id(4)  // Cập nhật ID từ đối tượng Movie mới
+                .name("Mồ Tra Tấn")
+                .slug("mo-tra-tan")
+                .description("<div class=\"block__wysiwyg text-black-10 text-sm font-normal not-italic content-text content__data__full\"><p><span style=\"font-size:14px;\"><span style=\"font-family:Arial,Helvetica,sans-serif;\"><span style=\"font-variant: normal; white-space: pre-wrap;\"><span style=\"font-weight:400\"><span style=\"font-style:normal\"><span style=\"text-decoration:none\">Sau khi cha mẹ Sita thiệt mạng bất ngờ trong một vụ đánh bom liều chết, chỉ vì câu chuyện truyền miệng về Mồ Tra Tấn. Đau đớn và phẫn nộ, Sita quyết dành cả đời mình để chứng minh rằng Mồ Tra Tấn không tồn tại. Cho đến khi Sita quyết định ngủ trong ngôi mộ của một xác chết, sự thật kinh hoàng hé lộ, tất cả vượt xa sự hiểu biết của loài người...</span></span></span></span></span></span></p>\n" +
+                    "\n" +
+                    "<p><span style=\"font-size:14px;\"><a href=\"https://www.galaxycine.vn/phim-dang-chieu\">Phim mới</a>&nbsp;<strong>Grave Torture /&nbsp;Mồ Tra Tấn</strong>&nbsp;suất chiếu sớm 31.07 (Không áp dụng Movie Voucher), dự kiến ra mắt tại các <em><a href=\"https://www.galaxycine.vn/\">rạp chiếu phim</a></em> toàn quốc từ 02.08.2024.</span></p>\n" +
+                    "\n" +
+                    "<p><br>\n" +
+                    "<!--| --></p>\n" +
+                    "</div>")
+                .poster("https://cdn.galaxycine.vn/media/2024/7/25/grave-torture-1_1721895911608.jpg")
+                .bannerImg("https://cdn.galaxycine.vn/media/2024/7/25/grave-torture-2_1721895914944.jpg")
+                .ageRequirement(18)
+                .duration(81)
+                .rating(7.4)
+                .status(true)
+                .trailer("https://www.youtube.com/embed/KKKK8qptIJc?si=ZxuCGYVguo1jDfNo")
+                .releaseDate(LocalDate.of(2024, 8, 2))
+                .startAt(LocalDate.of(2024, 8, 2))
+                .endAt(LocalDate.of(2024, 9, 2))
+                .createdAt(LocalDate.now())
+                .updatedAt(LocalDate.now())
+                .producer("Come and See Pictures")
+                .country(indonesia)
+                .graphicsType(List.of(GraphicsType._2D))
+                .translationsType(List.of(TranslationType.PHỤ_ĐỀ))
+                .genres(kinhDi)
+                .directors(List.of(JokoAnwar))
+                .actors(List.of(FaradinaMufti, RezaRahadian, ChristineHakim))
+                .build()
+        );
+
     }
 
 
@@ -431,6 +549,7 @@ class CinemaApplicationTests {
                                             .startTime(startTime)
                                             .endTime(endTime)
                                             .movie(movie)
+                                            .type(ScreeningTimeType.SUẤT_CHIẾU_THEO_LỊCH)
                                             .auditorium(aud)
                                             .build()
                             );
@@ -465,4 +584,67 @@ class CinemaApplicationTests {
         postRepository.saveAll(posts);
     }
 
+    @Test
+    void createBaseTicketPrices(Cinema cinema) {
+       /* Tạo ra các loại vé dựa trên các tiêu chí sau:
+            các ngày trong tuần, _____> của mỗi loại suất chiếu ____>  của mỗi loại phim 2D, 3D _____> của mỗi loại phòng chiếu ____> của mỗi loại ghế _____> dành cho Rạp hiện tại
+            cuối tuần,
+*/
+        long price = 0;
+
+        for (DayType dayType : DayType.values()) {
+            for(ScreeningTimeType screeningTimeType : ScreeningTimeType.values()) {
+                for (GraphicsType graphicsType : GraphicsType.values()) {
+                    for (AuditoriumType auditoriumType : AuditoriumType.values()) {
+                        for (SeatType seatType : SeatType.values()) {
+
+                            if (dayType == DayType.WEEKDAY) {
+                                price += 10000;
+                            } else if (dayType == DayType.WEEKEND) {
+                                price += 15000;
+                            }
+
+                            if (screeningTimeType == ScreeningTimeType.SUẤT_CHIẾU_SỚM) {
+                                price += 20000;
+                            } else {
+                                price += 10000;
+                            }
+
+                            if (graphicsType == GraphicsType._3D) {
+                                price += 15000;
+                            } else {
+                                price += 10000;
+                            }
+
+                            if (auditoriumType == AuditoriumType.IMAX) {
+                                price += 20000;
+                            } else {
+                                price += 10000;
+                            }
+
+                            if (seatType == SeatType.VIP) {
+                                price += 15000;
+                            } else if (seatType == SeatType.COUPLE) {
+                                price += 15000;
+                            } else {
+                                price += 10000;
+                            }
+
+                            baseTicketPriceRepository.save(
+                                BaseTicketPrice.builder()
+                                    .seatType(seatType)
+                                    .graphicsType(graphicsType)
+                                    .screeningTimeType(screeningTimeType)
+                                    .dayType(dayType)
+                                    .auditoriumType(auditoriumType)
+                                    .cinema(cinema)
+                                    .price(price)
+                                    .build()
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

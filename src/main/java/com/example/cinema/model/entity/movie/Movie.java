@@ -1,5 +1,7 @@
 package com.example.cinema.model.entity.movie;
 
+import com.example.cinema.model.enums.GraphicsType;
+import com.example.cinema.model.enums.TranslationType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,18 +29,26 @@ public class Movie {
     private String poster;
     @Column(columnDefinition = "TEXT")
     private String bannerImg;
-    private int ageRequirement;
+    private String trailer;
+    private Integer ageRequirement;
     private int duration;
     private double rating;
     private boolean status;
     @Column(columnDefinition = "TEXT")
-    private String trailer;
     private LocalDate releaseDate;
     private LocalDate startAt;
     private LocalDate endAt;
     private LocalDate createdAt;
-    private LocalDate updateAt;
+    private LocalDate updatedAt;
     private String producer;
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "json")
+    private List<GraphicsType> graphicsType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "json")
+    private List<TranslationType> translationsType;
 
     @ManyToOne
     @JoinColumn(name = "countries_id")
