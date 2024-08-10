@@ -1,5 +1,6 @@
 package com.example.cinema.model.entity.movie;
 
+import com.example.cinema.converter.GenericConverter;
 import com.example.cinema.model.enums.GraphicsType;
 import com.example.cinema.model.enums.TranslationType;
 import jakarta.persistence.*;
@@ -15,40 +16,55 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table (name = "movies")
+@Table(name = "movies")
 public class Movie {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto tăng id
     private Integer id;
+
     @Column(nullable = false)
     private String name;
+
     private String slug;
+
     @Column(columnDefinition = "TEXT")
     private String description;
+
     @Column(columnDefinition = "TEXT")
     private String poster;
+
     @Column(columnDefinition = "TEXT")
     private String bannerImg;
+
     private String trailer;
+
     private Integer ageRequirement;
+
     private int duration;
+
     private double rating;
+
     private boolean status;
+
     @Column(columnDefinition = "TEXT")
     private LocalDate releaseDate;
+
     private LocalDate startAt;
+
     private LocalDate endAt;
+
     private LocalDate createdAt;
+
     private LocalDate updatedAt;
+
     private String producer;
 
-    @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "json")
-    private List<GraphicsType> graphicsType;
+    @Convert(converter = GraphicsTypeConverter.class)
+    private List<GraphicsType> graphicsTypes;
 
-    @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "json")
-    private List<TranslationType> translationsType;
+    @Convert(converter = TranslationTypeConverter.class)
+    private List<TranslationType> translationTypes;
 
     @ManyToOne
     @JoinColumn(name = "countries_id")
@@ -77,4 +93,18 @@ public class Movie {
             inverseJoinColumns = @JoinColumn(name = "actor_id")
     )
     private List<Actor> actors;
+
+    @Converter(autoApply = true)
+    public static class GraphicsTypeConverter extends GenericConverter<GraphicsType> {
+        public GraphicsTypeConverter() {
+            super(GraphicsType.class);
+        }
+    }
+
+    @Converter(autoApply = true)
+    public static class TranslationTypeConverter extends GenericConverter<TranslationType> {
+        public TranslationTypeConverter() {
+            super(TranslationType.class);
+        }
+    }
 }

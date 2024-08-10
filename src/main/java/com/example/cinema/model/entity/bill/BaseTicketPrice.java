@@ -29,7 +29,7 @@ public class BaseTicketPrice {
     @Enumerated(EnumType.STRING)
     ScreeningTimeType screeningTimeType; // Loại suất chiếu: SUAT_CHIEU_SOM, SUAT_CHIEU_THEO_LICH
 
-    @Column(name = "day_type")
+    @Enumerated(EnumType.STRING)
     DayType dayType; // Loại ngày áp dụng giá vé: WEEKDAY, WEEKEND
 
     @Enumerated(EnumType.STRING)

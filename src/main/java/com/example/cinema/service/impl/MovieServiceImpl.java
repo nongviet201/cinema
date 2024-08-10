@@ -36,7 +36,7 @@ public class MovieServiceImpl implements MovieService {
                            .status(request.isStatus())
                            .trailer(request.getTrailer())
                            .createdAt(LocalDate.now())
-                           .updateAt(LocalDate.now())
+                           .updatedAt(LocalDate.now())
                            .country(country.get())
                            .genres(genres)
                            .actors(actors)
