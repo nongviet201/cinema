@@ -146,14 +146,10 @@ class CinemaApplicationTests {
         Auditorium auditorium = auditoriumRepository.findById(auditoriumId);
         SeatType seatType;
 
-        int[] numbers = {5, 6, 7};
-
-        Integer limitVipRow = numbers[random.nextInt(numbers.length)];
-
         for (int i = 1; i <= row; i++) {
             if (i == 1) {
                 seatType = SeatType.COUPLE;
-            } else if (i > 1 && i <= limitVipRow) {
+            } else if (i > 1 && i <= (row/2) + 1) {
                 seatType = SeatType.VIP;
             } else {
                 seatType = SeatType.NORMAL;
