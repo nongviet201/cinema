@@ -1,6 +1,6 @@
 package com.example.cinema.service;
 
-import com.example.cinema.model.entity.movie.Movie;
+import com.example.cinema.entity.movie.Movie;
 import com.example.cinema.model.request.UpsertMovieRequest;
 
 import java.util.List;

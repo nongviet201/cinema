@@ -1,11 +1,11 @@
 package com.example.cinema;
 
-import com.example.cinema.model.entity.Post;
-import com.example.cinema.model.entity.bill.BaseTicketPrice;
-import com.example.cinema.model.entity.bill.Combo;
-import com.example.cinema.model.entity.cinema.*;
-import com.example.cinema.model.entity.movie.*;
-import com.example.cinema.model.entity.user.User;
+import com.example.cinema.entity.Post;
+import com.example.cinema.entity.bill.BaseTicketPrice;
+import com.example.cinema.entity.bill.Combo;
+import com.example.cinema.entity.cinema.*;
+import com.example.cinema.entity.movie.*;
+import com.example.cinema.entity.user.User;
 import com.example.cinema.model.enums.*;
 import com.example.cinema.repository.*;
 import org.junit.jupiter.api.Test;
@@ -597,7 +597,7 @@ class CinemaApplicationTests {
                             } else if (seatType == SeatType.COUPLE) {
                                 price += 15000;
                             } else {
-                                price += 10000;
+                                price += 5000;
                             }
 
                             baseTicketPriceRepository.save(

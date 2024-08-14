@@ -1,8 +1,8 @@
 package com.example.cinema.service.impl;
 
-import com.example.cinema.model.entity.cinema.Auditorium;
-import com.example.cinema.model.entity.cinema.Cinema;
-import com.example.cinema.model.entity.cinema.Showtime;
+import com.example.cinema.entity.cinema.Auditorium;
+import com.example.cinema.entity.cinema.Cinema;
+import com.example.cinema.entity.cinema.Showtime;
 import com.example.cinema.repository.AuditoriumRepository;
 import com.example.cinema.repository.CinemaRepository;
 import com.example.cinema.repository.ShowtimeRepository;

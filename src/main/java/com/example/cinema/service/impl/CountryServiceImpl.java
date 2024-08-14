@@ -1,6 +1,6 @@
 package com.example.cinema.service.impl;
 
-import com.example.cinema.model.entity.movie.Country;
+import com.example.cinema.entity.movie.Country;
 import com.example.cinema.repository.CountryRepository;
 import com.example.cinema.service.CountryService;
 import lombok.AllArgsConstructor;

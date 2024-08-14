@@ -1,6 +1,6 @@
 package com.example.cinema.service.impl;
 
-import com.example.cinema.model.entity.movie.Director;
+import com.example.cinema.entity.movie.Director;
 import com.example.cinema.repository.DirectorRepository;
 import com.example.cinema.service.DirectorService;
 import lombok.AllArgsConstructor;

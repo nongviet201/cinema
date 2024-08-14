@@ -1,6 +1,6 @@
 package com.example.cinema.repository;
 
-import com.example.cinema.model.entity.movie.Director;
+import com.example.cinema.entity.movie.Director;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

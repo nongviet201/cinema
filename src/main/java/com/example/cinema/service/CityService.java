@@ -1,6 +1,6 @@
 package com.example.cinema.service;
 
-import com.example.cinema.model.entity.cinema.City;
+import com.example.cinema.entity.cinema.City;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.example.cinema.service;
 
-import com.example.cinema.model.entity.cinema.Showtime;
+import com.example.cinema.entity.cinema.Showtime;
 
 import java.util.List;
 

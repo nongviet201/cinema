@@ -1,6 +1,6 @@
 package com.example.cinema.rest;
 
-import com.example.cinema.model.entity.cinema.Showtime;
+import com.example.cinema.entity.cinema.Showtime;
 import com.example.cinema.service.ShowtimeService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

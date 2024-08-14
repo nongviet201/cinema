@@ -1,6 +1,6 @@
 package com.example.cinema.service.impl;
 
-import com.example.cinema.model.entity.movie.*;
+import com.example.cinema.entity.movie.*;
 import com.example.cinema.model.request.UpsertMovieRequest;
 import com.example.cinema.repository.*;
 import com.example.cinema.service.MovieService;

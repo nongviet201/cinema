@@ -1,6 +1,6 @@
 package com.example.cinema.repository;
 
-import com.example.cinema.model.entity.cinema.Auditorium;
+import com.example.cinema.entity.cinema.Auditorium;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

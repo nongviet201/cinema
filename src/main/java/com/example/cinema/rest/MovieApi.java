@@ -1,6 +1,6 @@
 package com.example.cinema.rest;
 
-import com.example.cinema.model.entity.movie.Movie;
+import com.example.cinema.entity.movie.Movie;
 import com.example.cinema.model.request.UpsertMovieRequest;
 import com.example.cinema.service.MovieService;
 import jakarta.validation.Valid;
